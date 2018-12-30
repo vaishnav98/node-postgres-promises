@@ -27,7 +27,7 @@ function getAllUsers(req, res, next) {
 
 function createUser(req, res, next) {
     db.none('insert into account(id,username,password,super)' +
-      'values(DEFAULT, ${username}, ${hash}, ${super})',
+      'values(DEFAULT, ${username}, ${password}, ${super})',
     req.body)
     .then(function () {
       res.status(200)
