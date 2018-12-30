@@ -1,5 +1,5 @@
 var promise = require('bluebird');
-var mopbkdf2 = require('mosquitto_pbkdf2');
+var pbkdf2 = require('pbkdf2');
 
 var options = {
   // Initialization Options
