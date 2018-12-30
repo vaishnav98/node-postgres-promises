@@ -26,7 +26,6 @@ function getAllUsers(req, res, next) {
 }
 
 function createUser(req, res, next) {
-  createPasswordAsync(req.body.password, function(hash){
     db.none('insert into account(id,username,password,super)' +
       'values(DEFAULT, ${username}, ${hash}, ${super})',
     req.body)
@@ -40,7 +39,6 @@ function createUser(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-  });  
 }
 
 function getAllDevices(req, res, next) {
@@ -90,45 +88,10 @@ function createDevice(req, res, next) {
     });
 }
 
-function updateDevice(req, res, next) {
-  db.none('update acls set topic=$1 where username=$2  and topic=$3',
-    [req.body.topic, req.params.device.user, req.params.device.topic])
-    .then(function () {
-      res.status(200)
-        .json({
-          status: 'success',
-          message: 'Updated Device'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-
-function removeDevice(req, res, next) {
-  db.result('delete from acls where  username=$1  and topic=$2', 
-    [req.params.device.user, req.params.device.topic])
-    .then(function (result) {
-      /* jshint ignore:start */
-      res.status(200)
-        .json({
-          status: 'success',
-          message: `Removed ${result.rowCount} Device`
-        });
-      /* jshint ignore:end */
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
-
-
 module.exports = {
   getAllUsers: getAllUsers,
   createUser: createUser,
   getAllDevices: getAllDevices,
   getSingleDevice: getSingleDevice,
-  createDevice: createDevice,
-  updateDevice: updateDevice,
-  removeDevice: removeDevice
+  createDevice: createDevice
 };
