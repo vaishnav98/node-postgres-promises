@@ -8,10 +8,7 @@ router.get('/api/users', db.getAllUsers);
 router.post('/api/users', db.createUser);
 router.get('/api/devices', db.getAllDevices);
 router.get('/api/devices/:user', db.getSingleDevice);
-router.post('/api/devices', db.createDevice); //device is an object
-router.put('/api/devices/:device', db.updateDevice);
-router.delete('/api/devices/:device', db.removeDevice);
-
+router.post('/api/devices', db.createDevice); 
 // application -------------------------------------------------------------
 router.get('/', function (req, res) {
 
