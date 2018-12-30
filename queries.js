@@ -1,8 +1,7 @@
 var promise = require('bluebird');
-var pbkdf2 = require('pbkdf2');
+var pbkdf2 = require('mosquitto-pbkdf2');
 
 var options = {
-  // Initialization Options
   promiseLib: promise
 };
 
@@ -26,20 +25,23 @@ function getAllUsers(req, res, next) {
 }
 
 function createUser(req, res, next) {
+  var password=req.body.password;
+  pbkdf2.createPasswordAsync(password, onpasswordhash);
+  function onpasswordhash(hashed){  
     db.none('insert into account(id,username,password,super)' +
-      'values(DEFAULT, ${username}, ${password}, ${super})',
-    req.body)
-    .then(function () {
-      res.status(200)
-        .json({
-          status: 'success',
-          message: 'Inserted one User'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-}
+        'values(DEFAULT, $1,$2,$3)',[req.body.username,hashed,req.body.super])
+      .then(function () {
+        res.status(200)
+          .json({
+            status: 'success',
+            message: 'Inserted one User'
+          });
+      })
+      .catch(function (err) {
+        return next(err);
+      });
+  }
+  }
 
 function getAllDevices(req, res, next) {
   db.any('select * from acls')
